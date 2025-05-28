@@ -1,123 +1,115 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Seguimiento Diario - Andevs</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario de Seguimiento Diario</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f7f7fc;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      max-width: 600px;
-      margin: 40px auto;
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.05);
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 24px;
-    }
-    label {
-      display: block;
-      margin-top: 18px;
-      font-weight: bold;
-    }
-    input[type="text"],
-    input[type="date"],
-    select,
-    textarea {
-      width: 100%;
-      padding: 10px;
-      margin-top: 6px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-    .inline-time {
-      display: flex;
-      gap: 10px;
-    }
-    .inline-time select {
-      width: 100%;
-    }
-    button {
-      margin-top: 24px;
-      width: 100%;
-      padding: 12px;
-      background-color: #111827;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #1f2937;
-    }
+    body { font-family: sans-serif; background: #f7f7f7; padding: 20px; }
+    h1 { color: #1f4e79; }
+    .bloque { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; background: white; border-radius: 10px; }
+    label { display: block; margin-top: 10px; }
+    input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; }
+    button { background: #1f4e79; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; margin-top: 15px; }
+    button:hover { background: #163d5c; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Seguimiento Diario</h1>
-    <form action="https://docs.google.com/forms/d/e/1FAIpQLSdzyulFij06ws6So5OiKXTcihHTj-ESoQWwY2XLa9ZgUlDijg/formResponse" method="POST" target="_blank">
-      <label for="nombre">Nombre</label>
-      <select name="entry.576067794" id="nombre" required>
-        <option value="">Elige</option>
-        <option value="Manuel Gualda">Manuel Gualda</option>
-        <option value="Felipe Uribe">Felipe Uribe</option>
-        <option value="Martín Ruiz-Tagle">Martín Ruiz-Tagle</option>
-      </select>
+  <h1>Registro de Actividad Andevs</h1>
 
-      <label for="fecha">Fecha</label>
-      <input type="date" name="entry.726945054" required />
+  <form id="formulario">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required>
 
-      <label>Hora de inicio</label>
-      <div class="inline-time">
-        <select name="entry.628665026_hour" required>
-          <option value="">Hora</option>
-          ${[...Array(24).keys()].map(h => `<option value="${h}">${String(h).padStart(2, '0')}</option>`).join('')}
-        </select>
-        <select name="entry.628665026_minute" required>
-          <option value="">Minuto</option>
-          ${[...Array(60).keys()].map(m => `<option value="${m}">${String(m).padStart(2, '0')}</option>`).join('')}
-        </select>
-      </div>
+    <div id="bloques"></div>
 
-      <label>Hora de término</label>
-      <div class="inline-time">
-        <select name="entry.193724256_hour" required>
-          <option value="">Hora</option>
-          ${[...Array(24).keys()].map(h => `<option value="${h}">${String(h).padStart(2, '0')}</option>`).join('')}
-        </select>
-        <select name="entry.193724256_minute" required>
-          <option value="">Minuto</option>
-          ${[...Array(60).keys()].map(m => `<option value="${m}">${String(m).padStart(2, '0')}</option>`).join('')}
-        </select>
-      </div>
+    <button type="button" onclick="agregarBloque()">+ Agregar bloque</button>
+    <button type="submit">Enviar</button>
+  </form>
 
-      <label for="cliente">Cliente</label>
-      <input type="text" name="entry.285135558" id="cliente" required />
+  <script>
+    const endpoint = "https://script.google.com/macros/s/AKfycbxhN16ru9ticjZJ0LfMNs0mgecbNd0ypmxUGSr16APgGEnBFUG6q8YsR_TetsNeqSPgUw/exec";
+    let contador = 0;
 
-      <label for="area">Área</label>
-      <select name="entry.1267498075" id="area" required>
-        <option value="">Elige</option>
-        <option value="Comercial">Comercial</option>
-        <option value="Desarrollo">Desarrollo</option>
-      </select>
+    function agregarBloque() {
+      contador++;
+      const bloqueHTML = `
+        <div class="bloque" id="bloque${contador}">
+          <h3>Bloque ${contador}</h3>
+          <label>Tipo:</label>
+          <select name="tipo">
+            <option value="Comercial">Comercial</option>
+            <option value="Desarrollo">Desarrollo</option>
+          </select>
 
-      <label for="tipo">Tipo de actividad</label>
-      <input type="text" name="entry.1078612917" id="tipo" required />
+          <label>Cliente:</label>
+          <input type="text" name="cliente" required>
 
-      <label for="comentario">Comentario</label>
-      <textarea name="entry.1620089347" id="comentario" rows="3"></textarea>
+          <label>Actividad:</label>
+          <select name="actividad">
+            <option value="Reunión con potencial cliente">Reunión con potencial cliente</option>
+            <option value="Armado de pre propuesta">Armado de pre propuesta</option>
+            <option value="Armado de propuesta">Armado de propuesta</option>
+            <option value="Creación de contrato">Creación de contrato</option>
+            <option value="Seguimiento comercial">Seguimiento comercial</option>
+            <option value="Reunión de coordinación comercial">Reunión de coordinación comercial</option>
+            <option value="Reunión de avance con cliente">Reunión de avance con cliente</option>
+            <option value="Programación / Desarrollo técnico">Programación / Desarrollo técnico</option>
+            <option value="Mantención">Mantención</option>
+            <option value="Documentación">Documentación</option>
+            <option value="Reunión de entrega">Reunión de entrega</option>
+            <option value="Otro">Otro (especificar en comentario)</option>
+          </select>
 
-      <button type="submit">Enviar seguimiento</button>
-    </form>
-  </div>
+          <label>Hora de inicio (HH:MM):</label>
+          <input type="time" name="hora_inicio" required>
+
+          <label>Hora de fin (HH:MM):</label>
+          <input type="time" name="hora_fin" required>
+
+          <label>Comentario (opcional):</label>
+          <textarea name="comentario"></textarea>
+        </div>
+      `;
+      document.getElementById("bloques").insertAdjacentHTML("beforeend", bloqueHTML);
+    }
+
+    document.getElementById("formulario").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const nombre = document.getElementById("nombre").value;
+      const bloques = document.querySelectorAll(".bloque");
+
+      bloques.forEach(bloque => {
+        const tipo = bloque.querySelector("select[name='tipo']").value;
+        const cliente = bloque.querySelector("input[name='cliente']").value;
+        const actividad = bloque.querySelector("select[name='actividad']").value;
+        const hora_inicio = bloque.querySelector("input[name='hora_inicio']").value;
+        const hora_fin = bloque.querySelector("input[name='hora_fin']").value;
+        const comentario = bloque.querySelector("textarea[name='comentario']").value;
+
+        const data = {
+          nombre,
+          tipo,
+          cliente,
+          actividad,
+          hora_inicio,
+          hora_fin,
+          comentario,
+          fecha: new Date().toLocaleDateString("es-CL")
+        };
+
+        fetch(endpoint, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+      });
+
+      alert("¡Enviado correctamente!");
+      location.reload();
+    });
+  </script>
 </body>
 </html>
