@@ -3,112 +3,108 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Formulario de Seguimiento Diario</title>
+  <title>Seguimiento Diario</title>
   <style>
-    body { font-family: sans-serif; background: #f7f7f7; padding: 20px; }
-    h1 { color: #1f4e79; }
-    .bloque { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; background: white; border-radius: 10px; }
-    label { display: block; margin-top: 10px; }
-    input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; }
-    button { background: #1f4e79; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; margin-top: 15px; }
-    button:hover { background: #163d5c; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5fa;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    label {
+      font-weight: bold;
+    }
+    input, select, textarea {
+      padding: 8px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+    }
+    .success {
+      color: green;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
-  <h1>Registro de Actividad Andevs</h1>
+  <h1>Seguimiento Diario</h1>
+  <form id="registro-form">
+    <label for="nombre">Nombre</label>
+    <select id="nombre" name="nombre" required>
+      <option value="">Elige</option>
+      <option value="Manuel Gualda">Manuel Gualda</option>
+      <option value="Felipe Uribe">Felipe Uribe</option>
+      <option value="Martín Ruiz-Tagle">Martín Ruiz-Tagle</option>
+    </select>
 
-  <form id="formulario">
-    <label for="nombre">Nombre:</label>
-    <input type="text" id="nombre" name="nombre" required>
+    <label for="fecha">Fecha</label>
+    <input type="date" id="fecha" name="fecha" required>
 
-    <div id="bloques"></div>
+    <label for="horaInicio">Hora de inicio</label>
+    <input type="time" id="horaInicio" name="horaInicio">
 
-    <button type="button" onclick="agregarBloque()">+ Agregar bloque</button>
+    <label for="horaFin">Hora de término</label>
+    <input type="time" id="horaFin" name="horaFin" required>
+
+    <label for="cliente">Cliente</label>
+    <input type="text" id="cliente" name="cliente" required>
+
+    <label for="tipoActividad">Tipo de actividad</label>
+    <input type="text" id="tipoActividad" name="tipoActividad" required>
+
+    <label for="descripcion">Descripción</label>
+    <input type="text" id="descripcion" name="descripcion">
+
+    <label for="comentario">Comentario</label>
+    <textarea id="comentario" name="comentario"></textarea>
+
     <button type="submit">Enviar</button>
+    <p id="mensaje" class="success" style="display:none">Registro enviado exitosamente.</p>
   </form>
 
   <script>
-    const endpoint = "https://script.google.com/macros/s/AKfycbxhN16ru9ticjZJ0LfMNs0mgecbNd0ypmxUGSr16APgGEnBFUG6q8YsR_TetsNeqSPgUw/exec";
-    let contador = 0;
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxhN16ru9ticjZJ0LfMNs0mgecbNd0ypmxUGSr16APgGEnBFUG6q8YsR_TetsNeqSPgUw/exec';
+    const form = document.getElementById('registro-form');
+    const mensaje = document.getElementById('mensaje');
 
-    function agregarBloque() {
-      contador++;
-      const bloqueHTML = `
-        <div class="bloque" id="bloque${contador}">
-          <h3>Bloque ${contador}</h3>
-          <label>Tipo:</label>
-          <select name="tipo">
-            <option value="Comercial">Comercial</option>
-            <option value="Desarrollo">Desarrollo</option>
-          </select>
-
-          <label>Cliente:</label>
-          <input type="text" name="cliente" required>
-
-          <label>Actividad:</label>
-          <select name="actividad">
-            <option value="Reunión con potencial cliente">Reunión con potencial cliente</option>
-            <option value="Armado de pre propuesta">Armado de pre propuesta</option>
-            <option value="Armado de propuesta">Armado de propuesta</option>
-            <option value="Creación de contrato">Creación de contrato</option>
-            <option value="Seguimiento comercial">Seguimiento comercial</option>
-            <option value="Reunión de coordinación comercial">Reunión de coordinación comercial</option>
-            <option value="Reunión de avance con cliente">Reunión de avance con cliente</option>
-            <option value="Programación / Desarrollo técnico">Programación / Desarrollo técnico</option>
-            <option value="Mantención">Mantención</option>
-            <option value="Documentación">Documentación</option>
-            <option value="Reunión de entrega">Reunión de entrega</option>
-            <option value="Otro">Otro (especificar en comentario)</option>
-          </select>
-
-          <label>Hora de inicio (HH:MM):</label>
-          <input type="time" name="hora_inicio" required>
-
-          <label>Hora de fin (HH:MM):</label>
-          <input type="time" name="hora_fin" required>
-
-          <label>Comentario (opcional):</label>
-          <textarea name="comentario"></textarea>
-        </div>
-      `;
-      document.getElementById("bloques").insertAdjacentHTML("beforeend", bloqueHTML);
-    }
-
-    document.getElementById("formulario").addEventListener("submit", function(e) {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const nombre = document.getElementById("nombre").value;
-      const bloques = document.querySelectorAll(".bloque");
+      const formData = new FormData(form);
+      const data = {};
+      formData.forEach((value, key) => data[key] = value);
 
-      bloques.forEach(bloque => {
-        const tipo = bloque.querySelector("select[name='tipo']").value;
-        const cliente = bloque.querySelector("input[name='cliente']").value;
-        const actividad = bloque.querySelector("select[name='actividad']").value;
-        const hora_inicio = bloque.querySelector("input[name='hora_inicio']").value;
-        const hora_fin = bloque.querySelector("input[name='hora_fin']").value;
-        const comentario = bloque.querySelector("textarea[name='comentario']").value;
-
-        const data = {
-          nombre,
-          tipo,
-          cliente,
-          actividad,
-          hora_inicio,
-          hora_fin,
-          comentario,
-          fecha: new Date().toLocaleDateString("es-CL")
-        };
-
-        fetch(endpoint, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
+      try {
+        const response = await fetch(scriptURL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json'
+          },
           body: JSON.stringify(data)
         });
-      });
 
-      alert("¡Enviado correctamente!");
-      location.reload();
+        form.reset();
+        mensaje.style.display = 'block';
+      } catch (error) {
+        alert('Error al enviar los datos. Intenta nuevamente.');
+        console.error(error);
+      }
     });
   </script>
 </body>
