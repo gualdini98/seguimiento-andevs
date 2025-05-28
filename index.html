@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seguimiento Diario</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #f4f4f4;
+      border-radius: 8px;
+    }
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 6px;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 30px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #1976d2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0d47a1;
+    }
+  </style>
+</head>
+<body>
+  <h1>Seguimiento Diario</h1>
+  <form id="seguimiento-form">
+    <label for="nombre">Nombre *</label>
+    <select name="entry.576067794" id="nombre" required>
+      <option value="">Elige</option>
+      <option value="Manuel Gualda">Manuel Gualda</option>
+      <option value="Felipe Uribe">Felipe Uribe</option>
+      <option value="Martín Ruiz-Tagle">Martín Ruiz-Tagle</option>
+    </select>
+
+    <label for="fecha">Fecha *</label>
+    <input type="date" name="entry.726945054" required>
+
+    <label for="hora_inicio">Hora de inicio</label>
+    <input type="number" name="entry.628665026_hour" min="0" max="23" placeholder="Hora (0-23)">
+    <input type="number" name="entry.628665026_minute" min="0" max="59" placeholder="Minuto (0-59)">
+
+    <label for="hora_termino">Hora de término *</label>
+    <input type="number" name="entry.193724256_hour" min="0" max="23" placeholder="Hora (0-23)" required>
+    <input type="number" name="entry.193724256_minute" min="0" max="59" placeholder="Minuto (0-59)" required>
+
+    <label for="cliente">Cliente *</label>
+    <input type="text" name="entry.285135558" required>
+
+    <label for="area">Área *</label>
+    <select name="entry.1267498075" required>
+      <option value="">Elige</option>
+      <option value="Comercial">Comercial</option>
+      <option value="Desarrollo">Desarrollo</option>
+    </select>
+
+    <label for="tipo_actividad">Tipo de actividad *</label>
+    <input type="text" name="entry.1078612917" required>
+
+    <label for="comentario">Comentario</label>
+    <textarea name="entry.1620089347" rows="3"></textarea>
+
+    <!-- Campos ocultos obligatorios -->
+    <input type="hidden" name="fvv" value="1">
+    <input type="hidden" name="fbzx" value="-1996552012695146265">
+    <input type="hidden" name="pageHistory" value="0">
+
+    <button type="submit">Enviar</button>
+  </form>
+
+  <script>
+    const form = document.getElementById("seguimiento-form");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const params = new URLSearchParams();
+
+      for (const [key, value] of formData.entries()) {
+        params.append(key, value);
+      }
+
+      fetch("https://docs.google.com/forms/d/e/1FAIpQLSdzyulFij06ws6So5OiKXTcihHTj-ESoQWwY2XLa9ZgUlDijg/formResponse", {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: params.toString()
+      }).then(() => {
+        alert("✅ Registro enviado con éxito");
+        form.reset();
+      }).catch(err => {
+        alert("❌ Hubo un error al enviar");
+        console.error(err);
+      });
+    });
+  </script>
+</body>
+</html>
