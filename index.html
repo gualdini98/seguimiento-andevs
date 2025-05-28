@@ -3,116 +3,121 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Seguimiento Diario</title>
+  <title>Seguimiento Diario - Andevs</title>
   <style>
     body {
-      font-family: sans-serif;
+      font-family: Arial, sans-serif;
+      background: #f7f7fc;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
       max-width: 600px;
       margin: 40px auto;
-      padding: 20px;
-      background-color: #f4f4f4;
-      border-radius: 8px;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.05);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 24px;
     }
     label {
       display: block;
-      margin-top: 20px;
+      margin-top: 18px;
       font-weight: bold;
     }
-    input, select, textarea {
+    input[type="text"],
+    input[type="date"],
+    select,
+    textarea {
       width: 100%;
-      padding: 8px;
+      padding: 10px;
       margin-top: 6px;
-      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .inline-time {
+      display: flex;
+      gap: 10px;
+    }
+    .inline-time select {
+      width: 100%;
     }
     button {
-      margin-top: 30px;
-      padding: 10px 20px;
-      font-size: 16px;
-      background: #1976d2;
+      margin-top: 24px;
+      width: 100%;
+      padding: 12px;
+      background-color: #111827;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
+      font-size: 16px;
       cursor: pointer;
     }
     button:hover {
-      background: #0d47a1;
+      background-color: #1f2937;
     }
   </style>
 </head>
 <body>
-  <h1>Seguimiento Diario</h1>
-  <form id="seguimiento-form">
-    <label for="nombre">Nombre *</label>
-    <select name="entry.576067794" id="nombre" required>
-      <option value="">Elige</option>
-      <option value="Manuel Gualda">Manuel Gualda</option>
-      <option value="Felipe Uribe">Felipe Uribe</option>
-      <option value="Martín Ruiz-Tagle">Martín Ruiz-Tagle</option>
-    </select>
+  <div class="container">
+    <h1>Seguimiento Diario</h1>
+    <form action="https://docs.google.com/forms/d/e/1FAIpQLSdzyulFij06ws6So5OiKXTcihHTj-ESoQWwY2XLa9ZgUlDijg/formResponse" method="POST" target="_blank">
+      <label for="nombre">Nombre</label>
+      <select name="entry.576067794" id="nombre" required>
+        <option value="">Elige</option>
+        <option value="Manuel Gualda">Manuel Gualda</option>
+        <option value="Felipe Uribe">Felipe Uribe</option>
+        <option value="Martín Ruiz-Tagle">Martín Ruiz-Tagle</option>
+      </select>
 
-    <label for="fecha">Fecha *</label>
-    <input type="date" name="entry.726945054" required>
+      <label for="fecha">Fecha</label>
+      <input type="date" name="entry.726945054" required />
 
-    <label for="hora_inicio">Hora de inicio</label>
-    <input type="number" name="entry.628665026_hour" min="0" max="23" placeholder="Hora (0-23)">
-    <input type="number" name="entry.628665026_minute" min="0" max="59" placeholder="Minuto (0-59)">
+      <label>Hora de inicio</label>
+      <div class="inline-time">
+        <select name="entry.628665026_hour" required>
+          <option value="">Hora</option>
+          ${[...Array(24).keys()].map(h => `<option value="${h}">${String(h).padStart(2, '0')}</option>`).join('')}
+        </select>
+        <select name="entry.628665026_minute" required>
+          <option value="">Minuto</option>
+          ${[...Array(60).keys()].map(m => `<option value="${m}">${String(m).padStart(2, '0')}</option>`).join('')}
+        </select>
+      </div>
 
-    <label for="hora_termino">Hora de término *</label>
-    <input type="number" name="entry.193724256_hour" min="0" max="23" placeholder="Hora (0-23)" required>
-    <input type="number" name="entry.193724256_minute" min="0" max="59" placeholder="Minuto (0-59)" required>
+      <label>Hora de término</label>
+      <div class="inline-time">
+        <select name="entry.193724256_hour" required>
+          <option value="">Hora</option>
+          ${[...Array(24).keys()].map(h => `<option value="${h}">${String(h).padStart(2, '0')}</option>`).join('')}
+        </select>
+        <select name="entry.193724256_minute" required>
+          <option value="">Minuto</option>
+          ${[...Array(60).keys()].map(m => `<option value="${m}">${String(m).padStart(2, '0')}</option>`).join('')}
+        </select>
+      </div>
 
-    <label for="cliente">Cliente *</label>
-    <input type="text" name="entry.285135558" required>
+      <label for="cliente">Cliente</label>
+      <input type="text" name="entry.285135558" id="cliente" required />
 
-    <label for="area">Área *</label>
-    <select name="entry.1267498075" required>
-      <option value="">Elige</option>
-      <option value="Comercial">Comercial</option>
-      <option value="Desarrollo">Desarrollo</option>
-    </select>
+      <label for="area">Área</label>
+      <select name="entry.1267498075" id="area" required>
+        <option value="">Elige</option>
+        <option value="Comercial">Comercial</option>
+        <option value="Desarrollo">Desarrollo</option>
+      </select>
 
-    <label for="tipo_actividad">Tipo de actividad *</label>
-    <input type="text" name="entry.1078612917" required>
+      <label for="tipo">Tipo de actividad</label>
+      <input type="text" name="entry.1078612917" id="tipo" required />
 
-    <label for="comentario">Comentario</label>
-    <textarea name="entry.1620089347" rows="3"></textarea>
+      <label for="comentario">Comentario</label>
+      <textarea name="entry.1620089347" id="comentario" rows="3"></textarea>
 
-    <!-- Campos ocultos obligatorios -->
-    <input type="hidden" name="fvv" value="1">
-    <input type="hidden" name="fbzx" value="-1996552012695146265">
-    <input type="hidden" name="pageHistory" value="0">
-
-    <button type="submit">Enviar</button>
-  </form>
-
-  <script>
-    const form = document.getElementById("seguimiento-form");
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      const formData = new FormData(form);
-      const params = new URLSearchParams();
-
-      for (const [key, value] of formData.entries()) {
-        params.append(key, value);
-      }
-
-      fetch("https://docs.google.com/forms/d/e/1FAIpQLSdzyulFij06ws6So5OiKXTcihHTj-ESoQWwY2XLa9ZgUlDijg/formResponse", {
-        method: "POST",
-        mode: "no-cors",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: params.toString()
-      }).then(() => {
-        alert("✅ Registro enviado con éxito");
-        form.reset();
-      }).catch(err => {
-        alert("❌ Hubo un error al enviar");
-        console.error(err);
-      });
-    });
-  </script>
+      <button type="submit">Enviar seguimiento</button>
+    </form>
+  </div>
 </body>
 </html>
